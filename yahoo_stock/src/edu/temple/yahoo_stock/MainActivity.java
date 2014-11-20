@@ -36,9 +36,10 @@ public class MainActivity extends Activity {
 		price = (EditText) findViewById(R.id.edtPrice);
 		go = (Button) findViewById(R.id.btnGO);
 
+		
 		go.setOnClickListener(new OnClickListener() {
+			
 			public void onClick(View v) {
-
 				String theStock = stock.getText().toString();
 				String URL = "http://finance.yahoo.com/webservice/v1/symbols/"
 						+ theStock + "/quote?format=json";
@@ -48,8 +49,14 @@ public class MainActivity extends Activity {
 
 			class RetrieveMessages extends AsyncTask<String, Void, String> {
 				protected String doInBackground(String... urls) {
+					
+					while(true){
+						try{
+							Thread.sleep(10000);
+						
 					HttpClient client = new DefaultHttpClient();
 					String json = "";
+					
 					try {
 						String line = "";
 						HttpGet request = new HttpGet(urls[0]);
@@ -69,10 +76,17 @@ public class MainActivity extends Activity {
 					Log.e("Json:", json);
 					return json;
 				}
+					 catch (InterruptedException e) {
+						
+						e.printStackTrace();
+					}	
+					} 
+					};
 
 				protected void onPostExecute(String result) {
 
 					JSONObject reader = null;
+					
 					try {
 						reader = new JSONObject(result);
 
@@ -90,12 +104,12 @@ public class MainActivity extends Activity {
 						price.setText("price: " + priceCompany);
 
 					} catch (JSONException e) {
-							e.printStackTrace();
+						e.printStackTrace();
 					}
 
 				}
 			}
-
 		});
+	
 	}
 }
